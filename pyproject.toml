@@ -1,0 +1,75 @@
+[build-system]
+requires = ["uv_build>=0.12,<0.13"]
+build-backend = "uv_build"
+
+[project]
+name = "nvda-addon-kit"
+version = "0.1.0"
+description = "Scaffold, build, translate and install NVDA add-ons from a single addon.toml"
+authors = [
+    {name = "Beka Gozalishvili", email = "beqaprogger@gmail.com"},
+]
+requires-python = ">=3.13"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Adaptive Technologies",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Localization",
+]
+readme = "readme.md"
+license = "GPL-2.0-or-later"
+license-files = ["COPYING.txt"]
+keywords = ["nvda", "addon", "accessibility", "screen-reader", "build", "gettext"]
+
+dependencies = [
+    "babel==2.18.0",
+    "tomlkit==0.15.1",
+    "markdown==3.10.3",
+]
+
+[project.optional-dependencies]
+crowdin = [
+    "crowdin-api-client==1.28.0",
+]
+
+[project.scripts]
+nvaddon = "nvda_addon_kit.cli:main"
+
+[project.urls]
+Repository = "https://github.com/addonfactory/NVDAAddonKit"
+Issues = "https://github.com/addonfactory/NVDAAddonKit/issues"
+
+[dependency-groups]
+dev = [
+    "ruff==0.16.5",
+]
+
+[tool.uv.build-backend]
+module-name = "nvda_addon_kit"
+module-root = "src"
+
+[tool.ruff]
+line-length = 110
+target-version = "py313"
+
+builtins = [
+    "_",
+    "ngettext",
+    "pgettext",
+    "npgettext",
+]
+
+[tool.ruff.format]
+indent-style = "space"
+line-ending = "lf"
+
+[tool.ruff.lint]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15

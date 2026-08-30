@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+
+      - name: Install
+        run: uv sync
+
+      - name: Ruff
+        run: |
+          uv run ruff check src
+          uv run ruff format --check src
+
+  smoke:
+    name: Scaffold and build a real add-on
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # NVDA add-on authors are overwhelmingly on Windows, and the whole point
+        # of replacing xgettext/msgfmt with Babel was that the build works there.
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+
+      - name: Install
+        run: uv sync
+
+      # With no unit tests in the tree, this is the functional check: it drives
+      # the installed console script exactly as a user would.
+      - name: init, check, translate, build
+        shell: bash
+        run: |
+          set -e
+          uv run nvaddon init "$RUNNER_TEMP/smokeAddon" --yes \
+            --name smokeAddon --summary "Smoke Add-on" \
+            --author "CI <ci@example.com>" \
+            --min-nvda 2024.1 --last-tested 2025.3
+          cd "$RUNNER_TEMP/smokeAddon"
+          uv run --project "$GITHUB_WORKSPACE" nvaddon check
+          uv run --project "$GITHUB_WORKSPACE" nvaddon pot
+          uv run --project "$GITHUB_WORKSPACE" nvaddon locale-add de
+          uv run --project "$GITHUB_WORKSPACE" nvaddon locale-update
+          uv run --project "$GITHUB_WORKSPACE" nvaddon build
+
+          test -f smokeAddon.pot || { echo "pot was not generated"; exit 1; }
+          test -f smokeAddon-1.0.0.nvda-addon || { echo "add-on was not built"; exit 1; }
+          test -f addon/locale/de/LC_MESSAGES/nvda.mo || { echo "translation not compiled"; exit 1; }
+
+          uv run --project "$GITHUB_WORKSPACE" nvaddon clean
+          test ! -f smokeAddon-1.0.0.nvda-addon || { echo "clean left the add-on behind"; exit 1; }
+          test -f addon/locale/de/LC_MESSAGES/nvda.po || { echo "clean deleted a source file"; exit 1; }

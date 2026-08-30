@@ -1,0 +1,92 @@
+name: build add-on
+
+on:
+  push:
+    tags: ["*"]
+    # To build on every push to the default branch, uncomment the following line:
+    # branches: [ main, master ]
+
+  pull_request:
+    branches: [ main, master ]
+
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v7
+
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+        python-version-file: ".python-version"
+
+    # nvda-addon-kit does all of its gettext work through Babel, so there is no
+    # system package to install here.
+    - name: Install nvda-addon-kit
+      run: pip install nvda-addon-kit
+
+    - name: Validate addon.toml
+      run: nvaddon check
+
+    - name: Code checks
+      if: hashFiles('pyproject.toml') != ''
+      run: |
+        pip install ruff
+        ruff check addon
+        ruff format --check addon
+
+    - name: Build add-on
+      run: |
+        nvaddon build
+        nvaddon pot
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: packaged_addon
+        path: |
+          ./*.nvda-addon
+        archive: false
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: translation_template
+        path: |
+          ./*.pot
+        archive: false
+
+  upload_release:
+    runs-on: ubuntu-latest
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    needs: ["build"]
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v8
+      with:
+        path: .
+        merge-multiple: true
+
+    - name: Calculate sha256
+      run: |
+        echo -e "\nSHA256: " >> changelog.md
+        sha256sum *.nvda-addon >> changelog.md
+
+    - name: Release
+      uses: softprops/action-gh-release@v3
+      with:
+        files: |
+          *.nvda-addon
+          *.pot
+        body_path: changelog.md
+        fail_on_unmatched_files: true
+        # Tags are <version>-<channel>, so every tag contains a hyphen.
+        # Only the stable channel is a full release.
+        prerelease: ${{ !endsWith(github.ref, '-stable') }}

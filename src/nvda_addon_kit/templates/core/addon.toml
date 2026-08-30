@@ -1,0 +1,107 @@
+# Configuration for this NVDA add-on.
+#
+# Everything the add-on declares about itself lives here. `nvaddon build` turns
+# the [addon] table into `addon/manifest.ini`, and `nvaddon pot` collects the
+# translatable strings below into the translation template.
+#
+# The comment directly above a translatable string becomes that string's note to
+# translators, so keep the `# Translators:` lines and write them for someone who
+# cannot see where the text appears.
+
+[addon]
+# Add-on name/identifier, internal to NVDA. Not shown to users.
+name = "%%NAME%%"
+
+# Translators: Summary/title for this add-on, to be shown on installation
+# and in add-on information found in the add-on store.
+summary = "%%SUMMARY%%"
+
+# Translators: Long description to be shown for this add-on
+# in add-on information from the add-on store.
+description = """%%DESCRIPTION%%"""
+
+# Version of this add-on. The add-on store requires major.minor.patch integers.
+# `nvaddon release patch` sets this for you.
+version = "%%VERSION%%"
+
+# Translators: What's new in this version of the add-on, shown in the add-on store.
+changelog = """%%CHANGELOG%%"""
+
+# Author(s), as "Name <name@domain.com>".
+author = "%%AUTHOR%%"
+
+# URL for the add-on's documentation or support page.
+url = "%%URL%%"
+
+# URL of the repository where this add-on's source code can be found.
+sourceURL = "%%SOURCE_URL%%"
+
+# Documentation file name, opened by the Help button in NVDA's Add-on Store.
+# Generated from readme.md at build time.
+docFileName = "readme.html"
+
+# Oldest NVDA version this add-on supports, e.g. "2024.1".
+# NVDA refuses to install the add-on on anything older.
+minimumNVDAVersion = "%%MIN_NVDA%%"
+
+# Most recent NVDA version this add-on has been tested against, e.g. "2025.3".
+# NVDA warns users running anything newer.
+lastTestedNVDAVersion = "%%LAST_TESTED%%"
+
+# Update channel: "stable", "beta", or "dev". `nvaddon release` sets this for
+# you, so change it by hand only if you know you need to.
+updateChannel = "stable"
+
+# Licence this add-on is distributed under, and where to read it.
+license = "%%LICENSE%%"
+licenseURL = "%%LICENSE_URL%%"
+
+[build]
+# The Python files that make up this add-on. These are scanned for translatable
+# strings, so every file containing a `_("...")` call must be matched here.
+# Patterns are globs relative to this file; `**` matches nested directories.
+pythonSources = %%PYTHON_SOURCES%%
+
+# Files inside the `addon` directory to leave out of the built add-on.
+# Paths are relative to `addon/`, not to this file.
+excludedFiles = []
+
+[l10n]
+# The language this add-on is written in. Its strings are the translation
+# sources, so it is never itself translated.
+baseLanguage = "%%BASE_LANGUAGE%%"
+
+# Extra files to scan for translatable strings, on top of build.pythonSources.
+extraSources = []
+
+[docs]
+# Python-Markdown extensions used when rendering documentation. Most add-ons
+# need none; add "tables" if your readme uses Markdown tables.
+markdownExtensions = []
+
+# Custom braille translation tables, speech symbol dictionaries and speech
+# (pronunciation) dictionaries. Most add-ons ship none of these; delete the
+# examples below or leave them commented out.
+#
+# Braille tables live in `addon/brailleTables/`:
+#
+# [brailleTables."my-table.ctb"]
+# # Translators: The name of a custom braille table.
+# displayName = "My braille table"
+# contracted = false
+# output = true
+# input = true
+#
+# Symbol dictionaries live in `addon/locale/<lang>/symbols-<name>.dic`:
+#
+# [symbolDictionaries."myDictionary"]
+# # Translators: The name of a custom speech symbol dictionary.
+# displayName = "My symbol dictionary"
+# mandatory = false
+#
+# Speech dictionaries live in `addon/speechDicts/<name>.dic`:
+#
+# [speechDictionaries."myDictionary"]
+# # Translators: The name of a custom speech dictionary.
+# displayName = "My speech dictionary"
+# mandatory = false

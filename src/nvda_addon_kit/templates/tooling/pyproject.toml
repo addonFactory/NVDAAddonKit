@@ -1,0 +1,39 @@
+[project]
+name = "%%NAME%%-dev"
+version = "0.0.0"
+description = "Development environment for the %%SUMMARY%% NVDA add-on"
+requires-python = ">=3.13"
+dependencies = [
+    "nvda-addon-kit",
+]
+
+[dependency-groups]
+lint = [
+    "ruff==0.16.5",
+]
+dev = [
+    { include-group = "lint" },
+]
+
+[tool.ruff]
+line-length = 110
+
+builtins = [
+    "_",
+    "ngettext",
+    "pgettext",
+    "npgettext",
+]
+
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+]
+
+[tool.ruff.format]
+indent-style = "space"
+line-ending = "lf"
+
+[tool.ruff.lint]
+logger-objects = ["logHandler.log"]

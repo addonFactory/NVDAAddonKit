@@ -1,0 +1,10 @@
+# Everything in this repository is LF, in the index and in the working tree.
+# `text=auto` alone would let a checkout on Windows (or on a Windows drive
+# under WSL) produce CRLF files that `ruff format --check` rejects, even though
+# the committed content was correct all along.
+* text=auto eol=lf
+
+# Template payloads are written verbatim into generated add-on repositories,
+# so they must be byte-identical wherever `nvaddon init` runs. PowerShell on
+# Windows reads LF without complaint, so this covers the .ps1 script too.
+src/nvda_addon_kit/templates/** text eol=lf
