@@ -47,7 +47,7 @@ def _literal(node: ast.AST) -> object:
 
     if isinstance(node, ast.Dict):
         mapping: dict[str, object] = {}
-        for keyNode, valueNode in zip(node.keys, node.values):
+        for keyNode, valueNode in zip(node.keys, node.values, strict=True):
             if keyNode is None:
                 continue
             key = _literal(keyNode)
@@ -72,7 +72,7 @@ def _commentsAbove(lines: list[str], lineno: int) -> list[str]:
         if not stripped.startswith("#"):
             break
         text = stripped.lstrip("#")
-        comments.append(text[1:] if text.startswith(" ") else text)
+        comments.append(text.removeprefix(" "))
         index -= 1
     return list(reversed(comments))
 
@@ -83,9 +83,13 @@ def _findAssignment(tree: ast.Module, name: str) -> ast.AST | None:
             for target in node.targets:
                 if isinstance(target, ast.Name) and target.id == name:
                     return node.value
-        elif isinstance(node, ast.AnnAssign):
-            if isinstance(node.target, ast.Name) and node.target.id == name and node.value:
-                return node.value
+        elif (
+            isinstance(node, ast.AnnAssign)
+            and isinstance(node.target, ast.Name)
+            and node.target.id == name
+            and node.value
+        ):
+            return node.value
     return None
 
 
@@ -94,7 +98,7 @@ def _parseAddonInfo(node: ast.AST, lines: list[str]) -> tuple[dict[str, object],
     comments: dict[str, list[str]] = {}
 
     if isinstance(node, ast.Dict):
-        for keyNode, valueNode in zip(node.keys, node.values):
+        for keyNode, valueNode in zip(node.keys, node.values, strict=True):
             if keyNode is None or not isinstance(keyNode, ast.Constant):
                 continue
             key = keyNode.value
@@ -155,7 +159,7 @@ def _nestedComments(node: ast.AST, lines: list[str]) -> dict[tuple[str, str], li
     if not isinstance(node, ast.Dict):
         return comments
 
-    for entryKey, entryValue in zip(node.keys, node.values):
+    for entryKey, entryValue in zip(node.keys, node.values, strict=True):
         if entryKey is None or not isinstance(entryKey, ast.Constant):
             continue
         entryName = entryKey.value

@@ -2,14 +2,16 @@
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 
-import sys
 import os
+import sys
+
 from crowdin_api import CrowdinClient
 
 
 def findFileId(client: CrowdinClient, projectId: int, baseTarget: str, searchExt: str) -> int | None:
     """
-    Iterates through all project files (using pagination) to find the ID of the source file matching the target name and extension.
+    Iterates through all project files (using pagination) to find the ID of the
+    source file matching the target name and extension.
 
     :param client: The Crowdin API client instance.
     :param projectId: The ID of the Crowdin project.
@@ -53,7 +55,7 @@ def getScoreFromApi(fileNameToSearch: str, langId: str) -> float:
     :param langId: The language code (e.g., 'fr' or 'pt_BR').
     :return: The translation ratio between 0.0 and 1.0.
     """
-    token = os.environ.get("crowdinAuthToken")
+    token = os.environ.get("crowdinAuthToken")  # noqa: SIM112 - name set by NV Access's workflow
     projectIdEnv = os.environ.get("CROWDIN_PROJECT_ID")
 
     if not token or not projectIdEnv:
@@ -111,7 +113,7 @@ def getScoreFromApi(fileNameToSearch: str, langId: str) -> float:
         print(f"DEBUG: Language '{langId}' not found in progress list for this file.")
         return 0.0
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - any API failure means 'progress unknown'
         print(f"API ERROR: {e}")
         return 0.0
 

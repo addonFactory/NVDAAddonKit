@@ -60,7 +60,7 @@ def _client(args: argparse.Namespace) -> Any:
             "  pip install 'nvda-addon-kit[crowdin]'",
         ) from exc
 
-    token = args.token or os.environ.get("CROWDIN_TOKEN") or os.environ.get("crowdinAuthToken")
+    token = args.token or os.environ.get("CROWDIN_TOKEN") or os.environ.get("crowdinAuthToken")  # noqa: SIM112 - name set by NV Access's workflow
     if not token:
         raise AddonKitError(
             "No Crowdin API token. Pass --token, or set the CROWDIN_TOKEN environment variable.",
@@ -121,7 +121,7 @@ def _progressByLanguage(client: Any, projectId: int, fileId: int) -> dict[str, i
 
 def _download(url: str, destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
-    with urllib.request.urlopen(url, timeout=_DOWNLOAD_TIMEOUT) as response:  # noqa: S310
+    with urllib.request.urlopen(url, timeout=_DOWNLOAD_TIMEOUT) as response:
         destination.write_bytes(response.read())
 
 

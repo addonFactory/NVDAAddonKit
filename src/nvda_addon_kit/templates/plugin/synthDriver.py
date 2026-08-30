@@ -19,8 +19,8 @@ class SynthDriver(SynthDriver):
         SynthDriver.PitchSetting(),
         SynthDriver.VolumeSetting(),
     )
-    supportedCommands = {IndexCommand}
-    supportedNotifications = {synthIndexReached}
+    supportedCommands = frozenset({IndexCommand})
+    supportedNotifications = frozenset({synthIndexReached})
 
     @classmethod
     def check(cls) -> bool:

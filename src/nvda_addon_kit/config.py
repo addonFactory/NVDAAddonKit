@@ -13,11 +13,11 @@ from tomlkit.items import Comment, Whitespace
 from .errors import ConfigError, ConfigNotFoundError, ValidationIssue
 from .models import (
     TRANSLATABLE_METADATA_KEYS,
-    Channel,
     AddonConfig,
     AddonMetadata,
     BrailleTable,
     BuildConfig,
+    Channel,
     DictionaryEntry,
     DocsConfig,
     L10nConfig,
@@ -109,7 +109,7 @@ def _commentsForTable(container: Any) -> dict[str, str]:
         if key is None:
             if isinstance(item, Comment):
                 text = item.trivia.comment.lstrip("#")
-                pending.append(text[1:] if text.startswith(" ") else text)
+                pending.append(text.removeprefix(" "))
             elif isinstance(item, Whitespace) and "\n" in item.value:
                 pending.clear()
             continue
@@ -117,7 +117,7 @@ def _commentsForTable(container: Any) -> dict[str, str]:
         leading = getattr(item.trivia, "comment", "")
         if leading and not pending:
             text = leading.lstrip("#")
-            pending.append(text[1:] if text.startswith(" ") else text)
+            pending.append(text.removeprefix(" "))
 
         if pending:
             comments[key.key] = "\n".join(pending)

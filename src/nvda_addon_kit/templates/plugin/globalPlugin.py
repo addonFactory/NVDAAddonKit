@@ -2,6 +2,8 @@
 # This file is covered by the GNU General Public License.
 # See the file COPYING.txt for more details.
 
+from contextlib import suppress
+
 import addonHandler
 import config
 import gui
@@ -48,10 +50,8 @@ class GlobalPlugin(GlobalPlugin):
             ui.message(_("%%SUMMARY%% is ready"))
 
     def terminate(self):
-        try:
+        with suppress(ValueError):
             NVDASettingsDialog.categoryClasses.remove(AddonSettingsPanel)
-        except ValueError:
-            pass
         super().terminate()
 
     @script(

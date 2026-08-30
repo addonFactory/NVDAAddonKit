@@ -7,7 +7,9 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from . import __version__, build as buildModule, config as configModule, l10n
+from . import __version__, l10n
+from . import build as buildModule
+from . import config as configModule
 from .errors import AddonKitError
 from .models import AddonConfig, Channel
 

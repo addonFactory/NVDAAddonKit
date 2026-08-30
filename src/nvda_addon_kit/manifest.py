@@ -7,10 +7,10 @@ from pathlib import Path
 from .errors import BuildError
 from .models import (
     MANIFEST_KEY_ORDER,
-    Channel,
     AddonConfig,
     AddonMetadata,
     BrailleTable,
+    Channel,
     DictionaryEntry,
     manifestQuoting,
 )
