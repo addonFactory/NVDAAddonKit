@@ -156,18 +156,38 @@ def cmdClean(args: argparse.Namespace) -> int:
 
 
 def cmdMigrate(args: argparse.Namespace) -> int:
-    from .migrate import migrateBuildVars
+    from .modernize import Stage, applyMigration, planMigration, requireCleanTree
 
-    start = Path(args.directory) if args.directory else Path.cwd()
-    source = Path(args.buildvars) if args.buildvars else start / "buildVars.py"
-    destination = Path(args.output) if args.output else start / configModule.CONFIG_FILENAME
+    root = Path(args.directory).resolve() if args.directory else Path.cwd()
+    stages = [Stage(name) for name in args.only.split(",")] if args.only else None
 
-    result = migrateBuildVars(source, destination, force=args.force)
-    print(f"Wrote {destination} from {source}")
-    for note in result.notes:
-        print(f"  note: {note}")
-    print("\nReview the result, then run `nvaddon check` and `nvaddon build`.")
-    print("Once the build output looks right, delete buildVars.py, sconstruct and site_scons/.")
+    if args.apply and not args.allow_dirty:
+        requireCleanTree(root)
+
+    plan = planMigration(root, stages)
+
+    if not plan:
+        print("Nothing to do; this add-on is already using nvda-addon-kit.")
+        for note in plan.notes:
+            print(f"  note: {note}")
+        return 0
+
+    print(f"{'Applying' if args.apply else 'Planned'} changes in {root}:\n")
+    for action in plan.actions:
+        print(action.describe(root))
+
+    if plan.notes:
+        print()
+        for note in plan.notes:
+            print(f"  note: {note}")
+
+    if not args.apply:
+        print("\nThis was a dry run. Re-run with --apply to make these changes.")
+        return 0
+
+    applyMigration(plan)
+    print(f"\nApplied {len(plan.actions)} changes. Review them with `git diff`.")
+    print("Then run `nvaddon check` and `nvaddon build` before committing.")
     return 0
 
 
@@ -321,10 +341,20 @@ def buildParser() -> argparse.ArgumentParser:
     clean = subparsers.add_parser("clean", help="remove generated build outputs")
     clean.set_defaults(func=cmdClean)
 
-    migrate = subparsers.add_parser("migrate", help="convert buildVars.py to addon.toml")
-    migrate.add_argument("--buildvars", metavar="PATH", help="path to buildVars.py")
-    migrate.add_argument("-o", "--output", metavar="PATH", help="path to write addon.toml to")
-    migrate.add_argument("--force", action="store_true", help="overwrite an existing addon.toml")
+    migrate = subparsers.add_parser("migrate", help="modernise a SCons-era add-on to use nvda-addon-kit")
+    migrate.add_argument(
+        "--apply", action="store_true", help="make the changes (without this, only prints the plan)"
+    )
+    migrate.add_argument(
+        "--only",
+        metavar="STAGES",
+        help="comma-separated subset: config, scons, ci, project, ignore",
+    )
+    migrate.add_argument(
+        "--allow-dirty",
+        action="store_true",
+        help="apply even though the working tree has uncommitted changes",
+    )
     migrate.set_defaults(func=cmdMigrate)
 
     release = subparsers.add_parser("release", help="set the version and channel, tag, and push the release")

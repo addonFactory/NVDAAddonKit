@@ -26,7 +26,7 @@ nvaddon build
 | `nvaddon locale-compile` | Compile `.po` files and translated manifests |
 | `nvaddon check` | Validate `addon.toml` against add-on store rules |
 | `nvaddon clean` | Remove generated build outputs |
-| `nvaddon migrate` | Convert an existing `buildVars.py` to `addon.toml` |
+| `nvaddon migrate` | Modernise a SCons-era add-on: config, build machinery, CI, pyproject |
 | `nvaddon release <version>` | Set version and channel, commit, tag `<version>-<channel>`, and push |
 | `nvaddon crowdin` | Sync translations with Crowdin |
 
@@ -86,8 +86,8 @@ nvaddon check
 nvaddon build
 ```
 
-`migrate` leaves `buildVars.py`, `sconstruct` and `site_scons/` in place; delete them once you
-are satisfied the build output matches.
+`migrate --apply` removes `buildVars.py`, `sconstruct` and `site_scons/` for you. It refuses to
+run on a dirty working tree, so `git diff` shows exactly what changed.
 
 ## Licence
 
