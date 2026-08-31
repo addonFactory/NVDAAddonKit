@@ -203,6 +203,7 @@ def cmdRelease(args: argparse.Namespace) -> int:
         args.channel,
         push=not args.no_push,
         changelog=args.changelog,
+        tagPrefix=args.tag_prefix if args.tag_prefix is not None else config.release.tagPrefix,
     )
 
     print(f"{config.addon.version} -> {plan.version} on the {plan.channel} channel")
@@ -367,6 +368,11 @@ def buildParser() -> argparse.ArgumentParser:
         help="channel to release on (default: stable); the tag is <version>-<channel>",
     )
     release.add_argument("--no-push", action="store_true", help="commit and tag locally without pushing")
+    release.add_argument(
+        "--tag-prefix",
+        metavar="PREFIX",
+        help="prefix for the tag, e.g. v (default: [release] tagPrefix in addon.toml)",
+    )
     release.add_argument("--changelog", action="store_true", help="add a stub entry to changelog.md")
     release.set_defaults(func=cmdRelease)
 

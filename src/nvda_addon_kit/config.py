@@ -21,6 +21,7 @@ from .models import (
     DictionaryEntry,
     DocsConfig,
     L10nConfig,
+    ReleaseConfig,
     TranslatableString,
 )
 
@@ -260,7 +261,13 @@ def parse(source: str, root: Path) -> AddonConfig:
     buildData = data.get("build", {})
     l10nData = data.get("l10n", {})
     docsData = data.get("docs", {})
-    for name, table in (("build", buildData), ("l10n", l10nData), ("docs", docsData)):
+    releaseData = data.get("release", {})
+    for name, table in (
+        ("build", buildData),
+        ("l10n", l10nData),
+        ("docs", docsData),
+        ("release", releaseData),
+    ):
         if not isinstance(table, dict):
             raise ConfigError(f"{CONFIG_FILENAME}: [{name}] must be a table")
 
@@ -292,12 +299,14 @@ def parse(source: str, root: Path) -> AddonConfig:
         msgidBugsAddress=(_optionalStr(l10nData, "msgidBugsAddress", "l10n") or L10nConfig.msgidBugsAddress),
     )
     docs = DocsConfig(markdownExtensions=_strList(docsData, "markdownExtensions", "docs"))
+    release = ReleaseConfig(tagPrefix=_optionalStr(releaseData, "tagPrefix", "release") or "")
 
     return AddonConfig(
         addon=metadata,
         build=build,
         l10n=l10n,
         docs=docs,
+        release=release,
         brailleTables=_parseNested(data, "brailleTables"),
         symbolDictionaries=_parseNested(data, "symbolDictionaries"),
         speechDictionaries=_parseNested(data, "speechDictionaries"),

@@ -156,6 +156,11 @@ class L10nConfig:
 
 
 @dataclass(frozen=True)
+class ReleaseConfig:
+    tagPrefix: str = ""
+
+
+@dataclass(frozen=True)
 class DocsConfig:
     markdownExtensions: list[str] = field(default_factory=list)
 
@@ -180,6 +185,7 @@ class AddonConfig:
     build: BuildConfig
     l10n: L10nConfig
     docs: DocsConfig
+    release: ReleaseConfig = field(default_factory=ReleaseConfig)
     brailleTables: dict[str, BrailleTable] = field(default_factory=dict)
     symbolDictionaries: dict[str, DictionaryEntry] = field(default_factory=dict)
     speechDictionaries: dict[str, DictionaryEntry] = field(default_factory=dict)

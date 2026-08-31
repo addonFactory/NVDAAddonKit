@@ -44,6 +44,15 @@ remote takes both or neither. If anything fails the working tree is restored to
 where it started, leaving no half-made release behind. Use `--no-push` to stop
 before publishing.
 
+Tags doesn't have prefix by default. If your addon's published tags already have it, You can configure it like below:
+
+```toml
+[release]
+tagPrefix = "v"      # produces v1.2.0-beta instead of 1.2.0-beta
+```
+
+`--tag-prefix` overrides it for a single release.
+
 ## addon.toml
 
 ```toml

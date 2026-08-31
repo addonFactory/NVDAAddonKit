@@ -49,8 +49,8 @@ def nextVersion(current: str, bump: str) -> str:
     return ".".join(str(number) for number in numbers)
 
 
-def tagName(version: str, channel: Channel) -> str:
-    return f"{version}-{channel.tagSuffix()}"
+def tagName(version: str, channel: Channel, prefix: str = "") -> str:
+    return f"{prefix}{version}-{channel.tagSuffix()}"
 
 
 def _git(root: Path, *arguments: str) -> subprocess.CompletedProcess[str]:
@@ -154,6 +154,7 @@ def release(
     *,
     push: bool = True,
     changelog: bool = False,
+    tagPrefix: str = "",
 ) -> ReleasePlan:
     document = tomlkit.parse(configPath.read_text(encoding="utf-8"))
     addon = document.get("addon")
@@ -162,7 +163,7 @@ def release(
 
     root = configPath.parent
     newVersion = nextVersion(str(addon.get("version", "")), version)
-    tag = tagName(newVersion, channel)
+    tag = tagName(newVersion, channel, tagPrefix)
 
     if changelog and not (root / "changelog.md").is_file():
         raise AddonKitError(f"No changelog.md in {root}, so --changelog has nothing to update.")
