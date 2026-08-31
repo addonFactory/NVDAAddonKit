@@ -207,9 +207,12 @@ def _rewritePyproject(text: str) -> tuple[str, list[str]]:
         if isinstance(exclude, list) and any(BUILD_VARS in str(item) for item in exclude):
             ruff["exclude"] = [item for item in exclude if BUILD_VARS not in str(item)]
             notes.append("pyproject.toml: dropped buildVars.py from [tool.ruff] exclude.")
-        perFile = ruff.get("lint", {}).get("per-file-ignores") if "lint" in ruff else None
+        lint = ruff.get("lint") if "lint" in ruff else None
+        perFile = lint.get("per-file-ignores") if lint is not None else None
         if perFile is not None and "sconstruct" in perFile:
             del perFile["sconstruct"]
+            if not perFile:
+                del lint["per-file-ignores"]
             notes.append("pyproject.toml: dropped the sconstruct per-file ignore.")
 
     return tomlkit.dumps(document), notes
