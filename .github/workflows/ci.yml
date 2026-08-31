@@ -32,8 +32,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # NVDA add-on authors are overwhelmingly on Windows, and the whole point
-        # of replacing xgettext/msgfmt with Babel was that the build works there.
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
@@ -47,8 +45,6 @@ jobs:
       - name: Install
         run: uv sync
 
-      # With no unit tests in the tree, this is the functional check: it drives
-      # the installed console script exactly as a user would.
       - name: init, check, translate, build
         shell: bash
         run: |
