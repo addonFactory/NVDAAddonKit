@@ -191,11 +191,42 @@ def cmdMigrate(args: argparse.Namespace) -> int:
     return 0
 
 
+def _confirmRelease(summary: dict[str, str]) -> bool:
+    print("About to release:\n")
+    for label, value in summary.items():
+        print(f"  {label:<16} {value}")
+    print()
+
+    try:
+        answer = input("Release? [Y/n]: ").strip().lower()
+    except EOFError:
+        raise AddonKitError(
+            "No answer available; nothing was released. Pass -y to release without confirming.",
+        ) from None
+    return answer in ("", "y", "yes")
+
+
 def cmdRelease(args: argparse.Namespace) -> int:
-    from .release import release
+    from .release import assertReleasable, nextVersion, release, tagName
 
     config = _loadConfig(args)
     configPath = configModule.findConfig(config.root)
+    prefix = args.tag_prefix if args.tag_prefix is not None else config.release.tagPrefix
+
+    newVersion = nextVersion(config.addon.version, args.version)
+    tag = tagName(newVersion, args.channel, prefix)
+    assertReleasable(config.root, tag, push=not args.no_push)
+
+    if not args.yes and not _confirmRelease(
+        {
+            "current version": f"{config.addon.version} ({config.addon.updateChannel})",
+            "release version": f"{newVersion} ({args.channel})",
+            "tag": tag,
+            "push": "no (--no-push)" if args.no_push else "yes",
+        },
+    ):
+        print("Cancelled; nothing was changed.")
+        return 1
 
     plan = release(
         configPath,
@@ -203,10 +234,10 @@ def cmdRelease(args: argparse.Namespace) -> int:
         args.channel,
         push=not args.no_push,
         changelog=args.changelog,
-        tagPrefix=args.tag_prefix if args.tag_prefix is not None else config.release.tagPrefix,
+        tagPrefix=prefix,
     )
 
-    print(f"{config.addon.version} -> {plan.version} on the {plan.channel} channel")
+    print(f"\n{config.addon.version} -> {plan.version} on the {plan.channel} channel")
     print(f"Committed and tagged {plan.tag}")
     if plan.pushed:
         print("Pushed the commit and the tag together.")
@@ -374,6 +405,7 @@ def buildParser() -> argparse.ArgumentParser:
         help="prefix for the tag, e.g. v (default: [release] tagPrefix in addon.toml)",
     )
     release.add_argument("--changelog", action="store_true", help="add a stub entry to changelog.md")
+    release.add_argument("-y", "--yes", action="store_true", help="do not ask for confirmation")
     release.set_defaults(func=cmdRelease)
 
     crowdin = subparsers.add_parser("crowdin", help="sync translations with Crowdin")

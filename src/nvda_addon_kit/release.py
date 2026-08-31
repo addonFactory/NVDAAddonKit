@@ -75,7 +75,7 @@ def _currentBranch(root: Path) -> str:
     return branch
 
 
-def _assertReleasable(root: Path, tag: str, *, push: bool) -> str:
+def assertReleasable(root: Path, tag: str, *, push: bool) -> str:
     if _git(root, "rev-parse", "--git-dir").returncode != 0:
         raise AddonKitError(f"{root} is not a git repository, so there is nothing to release.")
 
@@ -168,7 +168,7 @@ def release(
     if changelog and not (root / "changelog.md").is_file():
         raise AddonKitError(f"No changelog.md in {root}, so --changelog has nothing to update.")
 
-    remote = _assertReleasable(root, tag, push=push)
+    remote = assertReleasable(root, tag, push=push)
     branch = _currentBranch(root) if push else ""
     originalHead = _requireGit(root, "rev-parse", "HEAD", failure="Could not read HEAD")
 
