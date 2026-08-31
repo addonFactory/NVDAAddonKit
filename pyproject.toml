@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "nvda-addon-kit"
-version = "0.2.0"
+version = "0.2.1"
 description = "Scaffold, build, translate and install NVDA add-ons from a single addon.toml"
 authors = [
     {name = "Beka Gozalishvili", email = "beqaprogger@gmail.com"},
