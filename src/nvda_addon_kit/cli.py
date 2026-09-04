@@ -23,6 +23,9 @@ PLUGIN_KINDS: tuple[str, ...] = (
 )
 
 
+BANNER = f"NVDAAddonKit v{__version__} copyright 2026 Beka Gozalishvili"
+
+
 def _loadConfig(args: argparse.Namespace) -> AddonConfig:
     start = Path(args.directory) if getattr(args, "directory", None) else None
     return configModule.load(start)
@@ -430,6 +433,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not getattr(args, "func", None):
         parser.print_help()
         return 2
+
+    print(BANNER)
 
     try:
         return args.func(args)

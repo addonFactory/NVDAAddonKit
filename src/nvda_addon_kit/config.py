@@ -299,7 +299,10 @@ def parse(source: str, root: Path) -> AddonConfig:
         msgidBugsAddress=(_optionalStr(l10nData, "msgidBugsAddress", "l10n") or L10nConfig.msgidBugsAddress),
     )
     docs = DocsConfig(markdownExtensions=_strList(docsData, "markdownExtensions", "docs"))
-    release = ReleaseConfig(tagPrefix=_optionalStr(releaseData, "tagPrefix", "release") or "")
+    rawPrefix = releaseData.get("tagPrefix")
+    release = ReleaseConfig(
+        tagPrefix=ReleaseConfig.tagPrefix if rawPrefix is None else str(rawPrefix),
+    )
 
     return AddonConfig(
         addon=metadata,

@@ -57,9 +57,9 @@ license = "%%LICENSE%%"
 licenseURL = "%%LICENSE_URL%%"
 
 [release]
-# Prefix for the tags `nvaddon release` creates. Empty gives 1.2.0-stable;
-# "v" gives v1.2.0-stable. Match whatever your published releases already use.
-tagPrefix = ""
+# Prefix for the tags `nvaddon release` creates. "v" gives v1.2.0-stable;
+# set it to "" for 1.2.0-stable. Match whatever your published releases use.
+tagPrefix = "v"
 
 [build]
 # The Python files that make up this add-on. These are scanned for translatable

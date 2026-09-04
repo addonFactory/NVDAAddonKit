@@ -157,7 +157,7 @@ class L10nConfig:
 
 @dataclass(frozen=True)
 class ReleaseConfig:
-    tagPrefix: str = ""
+    tagPrefix: str = "v"
 
 
 @dataclass(frozen=True)

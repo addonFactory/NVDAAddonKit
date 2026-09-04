@@ -177,11 +177,12 @@ def release(
     if changelog and _updateChangelog(root, newVersion, channel):
         changed.append(root / "changelog.md")
 
+    message = f"Release {addon.get('name')} v{newVersion} {channel}"
     relative = [str(path.relative_to(root)) for path in changed]
     try:
         _requireGit(root, "add", *relative, failure="Could not stage the release")
-        _requireGit(root, "commit", "-m", f"Release {tag}", failure="Could not commit the release")
-        _requireGit(root, "tag", "-a", tag, "-m", f"Release {tag}", failure=f"Could not create tag {tag}")
+        _requireGit(root, "commit", "-m", message, failure="Could not commit the release")
+        _requireGit(root, "tag", "-a", tag, "-m", message, failure=f"Could not create tag {tag}")
 
         if push:
             _requireGit(
