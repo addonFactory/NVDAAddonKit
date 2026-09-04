@@ -45,7 +45,7 @@ def createBundle(
     base = addonDir.absolute()
     destination.parent.mkdir(parents=True, exist_ok=True)
 
-    with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED) as archive:
+    with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for path in sorted(base.rglob("*")):
             if path.is_dir():
                 continue
