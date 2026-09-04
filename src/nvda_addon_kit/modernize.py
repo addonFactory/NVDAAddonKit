@@ -42,7 +42,10 @@ SCONS_ARTEFACTS: tuple[str, ...] = (
     ".github/scripts/setOutputs.py",
 )
 
-CI_PAYLOAD: tuple[str, ...] = (".github/workflows/build_addon.yml",)
+CI_PAYLOAD: tuple[str, ...] = (
+    ".github/workflows/release.yml",
+    ".github/workflows/build_addon.yml",
+)
 
 CROWDIN_PAYLOAD: tuple[str, ...] = (
     ".github/workflows/crowdinL10n.yml",

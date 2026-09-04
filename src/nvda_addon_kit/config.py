@@ -302,6 +302,7 @@ def parse(source: str, root: Path) -> AddonConfig:
     rawPrefix = releaseData.get("tagPrefix")
     release = ReleaseConfig(
         tagPrefix=ReleaseConfig.tagPrefix if rawPrefix is None else str(rawPrefix),
+        autoSubmit=_bool(releaseData, "autoSubmit", ReleaseConfig.autoSubmit, "[release]"),
     )
 
     return AddonConfig(

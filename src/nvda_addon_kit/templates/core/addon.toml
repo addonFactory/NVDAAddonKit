@@ -30,7 +30,7 @@ changelog = """%%CHANGELOG%%"""
 # Author(s), as "Name <name@domain.com>".
 author = "%%AUTHOR%%"
 
-# URL for the add-on's documentation or support page.
+# URL for the add-on home page.
 url = "%%URL%%"
 
 # URL of the repository where this add-on's source code can be found.
@@ -40,12 +40,10 @@ sourceURL = "%%SOURCE_URL%%"
 # Generated from readme.md at build time.
 docFileName = "readme.html"
 
-# Oldest NVDA version this add-on supports, e.g. "2024.1".
-# NVDA refuses to install the add-on on anything older.
+# minimum NVDA version this add-on can run on, e.g. "2024.1".
 minimumNVDAVersion = "%%MIN_NVDA%%"
 
-# Most recent NVDA version this add-on has been tested against, e.g. "2025.3".
-# NVDA warns users running anything newer.
+# Latest NVDA version this add-on has been tested against, e.g. "2025.3".
 lastTestedNVDAVersion = "%%LAST_TESTED%%"
 
 # Update channel: "stable", "beta", or "dev". `nvaddon release` sets this for
@@ -57,9 +55,10 @@ license = "%%LICENSE%%"
 licenseURL = "%%LICENSE_URL%%"
 
 [release]
-# Prefix for the tags `nvaddon release` creates. "v" gives v1.2.0-stable;
-# set it to "" for 1.2.0-stable. Match whatever your published releases use.
 tagPrefix = "v"
+
+# Submit the add-on to the NVDA add-on store automatically when a tag is released. Set to false to publish the GitHub release without submitting.
+autoSubmit = true
 
 [build]
 # The Python files that make up this add-on. These are scanned for translatable

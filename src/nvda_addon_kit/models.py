@@ -158,6 +158,7 @@ class L10nConfig:
 @dataclass(frozen=True)
 class ReleaseConfig:
     tagPrefix: str = "v"
+    autoSubmit: bool = True
 
 
 @dataclass(frozen=True)
