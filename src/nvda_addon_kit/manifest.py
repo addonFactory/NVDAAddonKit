@@ -5,6 +5,7 @@
 from pathlib import Path
 
 from .errors import BuildError
+from .files import writeText
 from .models import (
     MANIFEST_KEY_ORDER,
     AddonConfig,
@@ -124,9 +125,7 @@ def renderTranslatedManifest(
 
 def writeManifest(config: AddonConfig, metadata: AddonMetadata | None = None) -> Path:
     destination = config.addonDir / "manifest.ini"
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(renderManifest(config, metadata), encoding="utf-8")
-    return destination
+    return writeText(destination, renderManifest(config, metadata))
 
 
 def writeTranslatedManifest(
@@ -136,6 +135,4 @@ def writeTranslatedManifest(
     metadata: AddonMetadata | None = None,
 ) -> Path:
     destination = config.localeDir / language / "manifest.ini"
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(renderTranslatedManifest(config, translations, metadata), encoding="utf-8")
-    return destination
+    return writeText(destination, renderTranslatedManifest(config, translations, metadata))

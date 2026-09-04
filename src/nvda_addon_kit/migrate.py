@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .errors import AddonKitError
+from .files import writeText
 
 _METADATA_KEYS: tuple[tuple[str, str], ...] = (
     ("addon_name", "name"),
@@ -307,5 +308,5 @@ def migrateBuildVars(source: Path, destination: Path, *, force: bool = False) ->
         raise AddonKitError(f"{destination} already exists. Pass --force to overwrite it.")
 
     text, notes = convertBuildVars(source.read_text(encoding="utf-8"))
-    destination.write_text(text, encoding="utf-8")
+    writeText(destination, text)
     return MigrationResult(destination=destination, notes=notes)

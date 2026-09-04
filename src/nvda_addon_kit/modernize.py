@@ -12,6 +12,7 @@ import tomlkit
 
 from .config import CONFIG_FILENAME
 from .errors import AddonKitError
+from .files import writeText
 from .migrate import convertBuildVars
 from .scaffold import TEMPLATES_DIR
 
@@ -338,8 +339,7 @@ def applyMigration(plan: Plan) -> list[Action]:
             case _:
                 if action.content is None:
                     continue
-                action.path.parent.mkdir(parents=True, exist_ok=True)
-                action.path.write_text(action.content, encoding="utf-8")
+                writeText(action.path, action.content)
     return plan.actions
 
 

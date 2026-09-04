@@ -10,6 +10,7 @@ from pathlib import Path
 import tomlkit
 
 from .errors import AddonKitError
+from .files import writeText
 from .models import Channel
 
 _EXPLICIT_VERSION = re.compile(r"^\d+\.\d+\.\d+$")
@@ -131,7 +132,7 @@ def _updateChangelog(root: Path, version: str, channel: Channel) -> bool:
     else:
         lines.extend(["", *entry])
 
-    changelog.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    writeText(changelog, "\n".join(lines) + "\n")
     return True
 
 
@@ -142,7 +143,7 @@ def _writeConfig(configPath: Path, version: str, channel: Channel) -> None:
         raise AddonKitError(f"{configPath} has no [addon] table.")
     addon["version"] = version
     addon["updateChannel"] = channel.value
-    configPath.write_text(tomlkit.dumps(document), encoding="utf-8")
+    writeText(configPath, tomlkit.dumps(document))
 
 
 def _rollback(root: Path, tag: str, originalHead: str) -> None:

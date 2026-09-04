@@ -6,6 +6,7 @@ import shutil
 from pathlib import Path
 
 from .errors import AddonKitError
+from .files import writeText
 from .models import PLUGIN_DIRECTORIES, Answers
 from .wizard import collectAnswers
 
@@ -63,7 +64,7 @@ def _copyTree(source: Path, destination: Path, placeholders: dict[str, str]) -> 
         except UnicodeDecodeError:
             _ = shutil.copyfile(path, target)
         else:
-            target.write_text(_substitute(text, placeholders, target.suffix), encoding="utf-8")
+            writeText(target, _substitute(text, placeholders, target.suffix))
         written.append(target)
 
     return written
@@ -76,11 +77,7 @@ def _writePlugin(destination: Path, answers: Answers, placeholders: dict[str, st
 
     source = TEMPLATES_DIR / "plugin" / f"{answers.plugin}.py"
     target = destination / "addon" / directory / f"{answers.name}.py"
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(
-        _substitute(source.read_text(encoding="utf-8"), placeholders, ".py"),
-        encoding="utf-8",
-    )
+    writeText(target, _substitute(source.read_text(encoding="utf-8"), placeholders, ".py"))
     return [target]
 
 

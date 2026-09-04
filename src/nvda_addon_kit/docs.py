@@ -7,6 +7,7 @@ from pathlib import Path
 
 import markdown
 
+from .files import writeText
 from .models import AddonConfig, AddonMetadata
 
 _IKIWIKI_TITLE: tuple[tuple[str, str], ...] = (
@@ -47,8 +48,7 @@ def renderDocument(
     title = f"{summary} {metadata.version}"
     language = source.parent.name.replace("_", "-")
     html = _renderPage(source.read_text(encoding="utf-8"), title, language, extensions)
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(html, encoding="utf-8")
+    writeText(destination, html)
     return destination
 
 

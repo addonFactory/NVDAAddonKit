@@ -103,7 +103,7 @@ def writeVersion(version: str) -> None:
             continue
         if inProject and re.match(r"^version\s*=", stripped):
             lines[index] = re.sub(r'"[^"]*"', f'"{version}"', line, count=1)
-            PYPROJECT.write_text("".join(lines), encoding="utf-8")
+            PYPROJECT.write_text("".join(lines).replace("\r\n", "\n"), encoding="utf-8", newline="\n")
             return
     raise ReleaseError(f"Could not find the version line in [project] of {PYPROJECT}.")
 
