@@ -1,7 +1,6 @@
 # nvda-addon-kit
 
-Scaffold, build, translate and install [NVDA](https://www.nvaccess.org/) add-ons from a single
-`addon.toml`.
+Scaffold, build, translate and install [NVDA](https://www.nvaccess.org/) add-ons from a single `addon.toml`.
 
 This is the successor to the SCons-based `addonTemplate`. Instead of forking a template repository and editing `buildVars.py`, you install a tool:
 
@@ -10,6 +9,12 @@ pip install nvda-addon-kit
 nvaddon init myAddon
 cd myAddon
 nvaddon build
+```
+
+Tool can also be run as a module:
+
+```console
+py -3.13 -m nvaddon init myAddon
 ```
 
 ## Commands
@@ -27,7 +32,7 @@ nvaddon build
 | `nvaddon check` | Validate `addon.toml` against add-on store rules |
 | `nvaddon clean` | Remove generated build outputs |
 | `nvaddon migrate` | Modernise a SCons-era add-on: config, build machinery, CI, pyproject |
-| `nvaddon release <version>` | Set version and channel, commit, tag `<version>-<channel>`, and push |
+| `nvaddon release <version>` | Set version and channel, commit, tag `v<version>-<channel>`, and push |
 | `nvaddon crowdin` | Sync translations with Crowdin |
 
 Run `nvaddon <command> --help` for the flags each one accepts.
@@ -38,20 +43,28 @@ Run `nvaddon <command> --help` for the flags each one accepts.
 nvaddon release 1.2.0 --channel beta
 ```
 
-This writes the version and channel into `addon.toml`, commits, tags
-`1.2.0-beta`, and pushes the commit and tag with `git push --atomic` so the
-remote takes both or neither. If anything fails the working tree is restored to
-where it started, leaving no half-made release behind. Use `--no-push` to stop
-before publishing.
+This writes the version and channel into `addon.toml`, commits, creates an annotated tag and pushes the commit and tag to the server. Use `--no-push` to stop before publishing.
 
-Tags doesn't have prefix by default. If your addon's published tags already have it, You can configure it like below:
+It shows what it is about to do and waits for confirmation:
 
-```toml
-[release]
-tagPrefix = "v"      # produces v1.2.0-beta instead of 1.2.0-beta
+```
+About to release:
+
+  current version  5.1.0 (stable)
+  release version  5.2.0 (beta)
+  tag              v5.2.0-beta
+  push             yes
+
+Release? [Y/n]:
 ```
 
-`--tag-prefix` overrides it for a single release.
+Pass `-y` to skip the prompt. Everything that could refuse the release is checked before you are asked, so you are never invited to approve something that cannot succeed.
+
+The bundled `release.yml` workflow runs on every push and pull request.
+Without a tag it uploads the add-on and the `.pot` as artifacts
+On a tag it publishes both as assets of a GitHub release, and then submits to the add-on store if `autoSubmit` is true in addon.toml.
+Submission needs a `USER_TOKEN` secret.
+See [Submit NVDA Addon github action](https://github.com/beqabeqa473/submitNVDAAddon) for more details.
 
 ## addon.toml
 
@@ -95,8 +108,7 @@ nvaddon check
 nvaddon build
 ```
 
-`migrate --apply` removes `buildVars.py`, `sconstruct` and `site_scons/` for you. It refuses to
-run on a dirty working tree, so `git diff` shows exactly what changed.
+`migrate --apply` removes `buildVars.py`, `sconstruct` and `site_scons/` for you. It refuses to run on a dirty working tree, so `git diff` shows exactly what changed.
 
 ## Licence
 
