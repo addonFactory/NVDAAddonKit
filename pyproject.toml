@@ -50,7 +50,7 @@ dev = [
 ]
 
 [tool.uv.build-backend]
-module-name = "nvda_addon_kit"
+module-name = ["nvda_addon_kit", "nvaddon"]
 module-root = "src"
 
 [tool.ruff]

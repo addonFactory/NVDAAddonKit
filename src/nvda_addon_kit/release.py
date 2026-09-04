@@ -31,7 +31,10 @@ def nextVersion(current: str, bump: str) -> str:
 
     if bump not in _BUMP_PARTS:
         raise AddonKitError(
-            f"{bump!r} is not a version. Use major, minor, patch, or an explicit version such as 1.2.3.",
+            f"{bump!r} is not a version number. Pass the version you want to release, "
+            f"or one of major, minor, patch to bump the current one.\n"
+            f"  nvaddon release 1.2.3\n"
+            f"  nvaddon release minor",
         )
 
     parts = current.split(".")
