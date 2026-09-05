@@ -312,8 +312,14 @@ def _addLanguageArgument(parser: argparse.ArgumentParser, *, required: bool, act
     )
 
 
+class _Parser(argparse.ArgumentParser):
+    def print_help(self, file: object = None) -> None:
+        print(BANNER, file=file if file is not None else sys.stdout)
+        super().print_help(file)
+
+
 def buildParser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
+    parser = _Parser(
         prog="nvaddon",
         description="Scaffold, build, translate and install NVDA add-ons.",
     )
@@ -433,8 +439,6 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not getattr(args, "func", None):
         parser.print_help()
         return 2
-
-    print(BANNER)
 
     try:
         return args.func(args)
