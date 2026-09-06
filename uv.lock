@@ -137,15 +137,15 @@ wheels = [
 
 [[package]]
 name = "crowdin-api-client"
-version = "1.28.0"
+version = "1.29.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "deprecated" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/dd/b25b5442ef2f2e550ad438054ff9cc41dd85b0319c3541bb1cf240846f90/crowdin_api_client-1.28.0.tar.gz", hash = "sha256:b4661caa2593cb4a1b6cad1be2f6333ff09b0dd5a617032cbd8df95d3df6293a", size = 73644, upload-time = "2026-08-17T11:15:57.079Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2c/a3/b357800b5996d5475de875187327f917b00fd34f614b428ca0d88bcf58e2/crowdin_api_client-1.29.0.tar.gz", hash = "sha256:becdb4103e0d3d6e2a5b5c129ad7850f0f8631da24bb46703c2b2d7befa4a5d7", size = 74666, upload-time = "2026-09-03T08:15:13.213Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8f/ba/adc4d4b9191ebc2e1da3cf36f6bc1ae885a2eb94e4fe34e9a4cfa8335488/crowdin_api_client-1.28.0-py3-none-any.whl", hash = "sha256:afddf7b84a7f2f5d31a52da3a2bb1a74d654168c31f3374ec3b638ac6c1358d2", size = 114881, upload-time = "2026-08-17T11:15:55.917Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/23/184b601011cb42d8a740eb6174406234d3d4fa40bf8aceec3155464c7a64/crowdin_api_client-1.29.0-py3-none-any.whl", hash = "sha256:2f16a27ff71a518b35f0b0209336f1a044aef26001c8bbcd546a6d18d2d9e3c2", size = 115738, upload-time = "2026-09-03T08:15:11.968Z" },
 ]
 
 [[package]]
@@ -201,7 +201,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "babel", specifier = "==2.18.0" },
-    { name = "crowdin-api-client", marker = "extra == 'crowdin'", specifier = "==1.28.0" },
+    { name = "crowdin-api-client", marker = "extra == 'crowdin'", specifier = "==1.29.0" },
     { name = "markdown", specifier = "==3.10.3" },
     { name = "tomlkit", specifier = "==0.15.1" },
 ]
