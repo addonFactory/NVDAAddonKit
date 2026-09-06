@@ -46,7 +46,7 @@ Issues = "https://github.com/addonfactory/NVDAAddonKit/issues"
 
 [dependency-groups]
 dev = [
-    "ruff==0.16.5",
+    "ruff==0.16.6",
 ]
 
 [tool.uv.build-backend]
