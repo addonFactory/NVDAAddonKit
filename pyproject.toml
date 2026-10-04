@@ -34,7 +34,7 @@ dependencies = [
 
 [project.optional-dependencies]
 crowdin = [
-    "crowdin-api-client==1.28.0",
+    "crowdin-api-client==1.30.0",
 ]
 
 [project.scripts]
