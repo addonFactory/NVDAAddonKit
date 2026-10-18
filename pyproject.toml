@@ -29,7 +29,7 @@ keywords = ["nvda", "addon", "accessibility", "screen-reader", "build", "gettext
 dependencies = [
     "babel==2.18.0",
     "tomlkit==0.15.1",
-    "markdown==3.10.3",
+    "markdown==3.11.1",
 ]
 
 [project.optional-dependencies]
