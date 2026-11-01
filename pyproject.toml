@@ -28,7 +28,7 @@ keywords = ["nvda", "addon", "accessibility", "screen-reader", "build", "gettext
 
 dependencies = [
     "babel==2.18.0",
-    "tomlkit==0.15.1",
+    "tomlkit==0.15.2",
     "markdown==3.10.3",
 ]
 
